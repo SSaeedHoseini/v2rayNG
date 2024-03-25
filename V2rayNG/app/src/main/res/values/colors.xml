@@ -16,4 +16,7 @@
     <color name="colorBg">#FFFFFF</color>
     <color name="colorText">#000000</color>
     <color name="colorMainTestBg">#F0F1F6</color>
+
+    <color name="warning">#B53F3F</color>
+    <color name="correct">#008000</color>
     </resources>

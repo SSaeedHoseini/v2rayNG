@@ -300,8 +300,9 @@ object V2RayServiceManager {
         service.startForeground(NOTIFICATION_ID, mBuilder?.build())
     }
 
+    // TODO chem chara
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel(): String {
+    fun createNotificationChannel(): String {
         val channelId = "RAY_NG_M_CH_ID"
         val channelName = "V2rayNG Background Service"
         val chan = NotificationChannel(channelId,

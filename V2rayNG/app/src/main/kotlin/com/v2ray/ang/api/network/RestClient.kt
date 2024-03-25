@@ -11,8 +11,8 @@ import retrofit2.Retrofit
 class RestClient {
 
     companion object {
-        private const val BASE_URL = "https://shahid-aleali.site/"
-//        private const val BASE_URL = "http://192.168.1.103:8001/"
+//        private const val BASE_URL = "https://shahid-aleali.site/"
+        private const val BASE_URL = "http://192.168.1.104:8000/"
 
         private lateinit var mApiServices: ApiServices
         private var mInstance: RestClient? = null

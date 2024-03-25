@@ -504,7 +504,8 @@ class ServerActivity : BaseActivity() {
             quicSecurity = requestHost,
             key = path,
             mode = transportTypes(networks[network])[type],
-            serviceName = path
+            serviceName = path,
+            authority = requestHost,
         )
         if (sniField.isNotBlank()) {
             sni = sniField
