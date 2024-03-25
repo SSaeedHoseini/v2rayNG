@@ -262,5 +262,10 @@
     </string-array>
     <string name="menu_item_add_asset">افزودن</string>
     <string name="menu_item_add_url">افزودن لینک</string>
+    <string name="login">ورود</string>
+    <string name="username">نام کاربری</string>
+    <string name="password">گذرواژه</string>
+    <string name="login_text">بزن بریم</string>
+    <string name="login_error_filed">لطفا نام کاربری و گذرواژه را وارد کنید</string>
 
 </resources>

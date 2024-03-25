@@ -19,6 +19,8 @@ object MmkvManager {
     const val KEY_SELECTED_SERVER = "SELECTED_SERVER"
     const val KEY_ANG_CONFIGS = "ANG_CONFIGS"
 
+    const val ACCESS_TOKEN = "user_token";
+
     private val mainStorage by lazy { MMKV.mmkvWithID(ID_MAIN, MMKV.MULTI_PROCESS_MODE) }
     private val serverStorage by lazy { MMKV.mmkvWithID(ID_SERVER_CONFIG, MMKV.MULTI_PROCESS_MODE) }
     private val serverAffStorage by lazy { MMKV.mmkvWithID(ID_SERVER_AFF, MMKV.MULTI_PROCESS_MODE) }
@@ -196,5 +198,15 @@ object MmkvManager {
         }
 
         mainStorage?.encode(KEY_ANG_CONFIGS, Gson().toJson(serverList))
+    }
+
+    fun encodeToken(token: String) {
+        if (token.isNullOrBlank()) {
+            return
+        }
+        mainStorage?.encode(ACCESS_TOKEN, token)
+    }
+    fun decodeToken(): String? {
+        return mainStorage?.decodeString(ACCESS_TOKEN)
     }
 }

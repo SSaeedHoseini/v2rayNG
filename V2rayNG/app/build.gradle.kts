@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services")
+id("com.google.gms.google-services")
 }
 
 android {
@@ -77,6 +77,11 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        dataBinding = true
+    }
+
+    packaging{
+        resources.excludes.add("META-INF/*")
     }
 }
 
@@ -123,6 +128,13 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.8.1")
     implementation("androidx.work:work-multiprocess:2.8.1")
 
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
+    implementation("com.android.databinding:compiler:3.5.1")
+    implementation("com.google.guava:guava:31.0.1-android")
+    
     // Firebase Cloud Messaging
     implementation("com.google.firebase:firebase-messaging:23.4.1")
 }
