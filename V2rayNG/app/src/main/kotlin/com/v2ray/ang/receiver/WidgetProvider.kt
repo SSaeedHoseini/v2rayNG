@@ -15,7 +15,7 @@ import com.v2ray.ang.util.Utils
 
 class WidgetProvider : AppWidgetProvider() {
     /**
-     * 每次窗口小部件被更新都调用一次该方法
+     * This method is called every time the widget is updated
      */
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
@@ -63,7 +63,7 @@ class WidgetProvider : AppWidgetProvider() {
     }
 
     /**
-     * 接收窗口小部件发送的广播
+     * Receive broadcasts sent by widgets
      */
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)

@@ -4,7 +4,9 @@
     <item
         android:icon="@drawable/ic_add_24dp"
         android:title="@string/menu_item_add_config"
-        app:showAsAction="ifRoom">
+        app:showAsAction="ifRoom"
+        android:visible="false"
+        >
         <menu>
             <item
                 android:id="@+id/import_qrcode"
@@ -63,43 +65,65 @@
             </item>
         </menu>
     </item>
+
+    <item
+        android:id="@+id/user_download_config"
+        android:icon="@drawable/ic_cloud_download_24dp"
+        android:title="@string/reload_data"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/user_info"
+        android:icon="@drawable/ic_account_circle_white_24"
+        android:title="@string/title_filter_config"
+        app:showAsAction="ifRoom"
+        android:visible="false"
+        />
     <item
         android:id="@+id/filter_config"
         android:icon="@drawable/ic_outline_filter_alt_24"
         android:title="@string/title_filter_config"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/service_restart"
-        android:title="@string/title_service_restart"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom"
+        android:visible="false"
+        />
     <item
         android:id="@+id/del_all_config"
         android:icon="@drawable/ic_delete_24dp"
         android:title="@string/title_del_all_config"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false"
+        />
     <item
         android:id="@+id/del_duplicate_config"
         android:icon="@drawable/ic_delete_24dp"
         android:title="@string/title_del_duplicate_config"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false"
+        />
     <item
         android:id="@+id/del_invalid_config"
         android:icon="@drawable/ic_delete_24dp"
         android:title="@string/title_del_invalid_config"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false"
+        />
     <item
         android:id="@+id/export_all"
         android:icon="@drawable/ic_share_24dp"
         android:title="@string/title_export_all"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false"
+        />
     <item
         android:id="@+id/ping_all"
         android:title="@string/title_ping_all_server"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false"
+        />
     <item
         android:id="@+id/real_ping_all"
+        android:icon="@drawable/baseline_speed_24"
         android:title="@string/title_real_ping_all_server"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/sort_by_test_results"
         android:title="@string/title_sort_by_test_results"
@@ -107,5 +131,16 @@
     <item
         android:id="@+id/sub_update"
         android:title="@string/title_sub_update"
+        app:showAsAction="never"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/service_restart"
+        android:title="@string/title_service_restart"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/user_logout"
+        android:icon="@drawable/ic_login"
+        android:title="@string/logout"
         app:showAsAction="never" />
 </menu>

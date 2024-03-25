@@ -246,11 +246,21 @@
     <string name="title_pref_fragment_length">Fragment Length (min-max)</string>
     <string name="title_pref_fragment_interval">Fragment Interval (min-max)</string>
     <string name="title_pref_fragment_enabled">Enable Fragment</string>
-    <string name="login">login</string>
-    <string name="username">username</string>
-    <string name="password">password</string>
-    <string name="login_text">let\'s go</string>
-    <string name="login_error_filed">Please enter username and password\n</string>
+    <string name="login">LOGIN</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="user_profile">profile</string>
+    <string name="name">name</string>
+    <string name="email">email</string>
+    <string name="created_at">created at</string>
+    <string name="update_at">updated at</string>
+    <string name="close">close</string>
+    <string name="app_no_internet_msg">no internet connection</string>
+    <string name="register">register</string>
+    <string name="fullname">fullname</string>
+    <string name="login_text">Login</string>
+    <string name="login_error_filed">Enter your username and password</string>
+    <string name="login_error">Login encountered an error</string>
 
     <string-array name="share_method">
         <item>QRcode</item>
@@ -281,5 +291,31 @@
         <item>VPN</item>
         <item>Proxy only</item>
     </string-array>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="error_in_login">Error in login!</string>
+    <string name="error_in_verified_token">user\' verification failed</string>
+    <string name="error_in_verified_token_message">Oops, there was an error verifying your account.</string>
+    <string name="logout">logout</string>
+    <string name="message">message</string>
+    <string name="account_status_is_unpaid">Note: Your account status is unpaid, please pay the debt as soon as possible.</string>
+    <string name="expire_at">Expires in</string>
+    <string name="server_is_not_available">server is not available!</string>
+    <string name="an_unknown_error_occurred">An unknown error occurred</string>
+    <string name="call_support">Call support</string>
+    <string name="get_user_info">get user info</string>
+    <string name="back">back</string>
+    <string name="telegram_channel">Telegram channel</string>
+    <string name="telegram_support">Telegram support</string>
+    <string name="email_support">Email support</string>
+    <string name="user_info">User account</string>
+    <string name="reload_data">reload data</string>
 
 </resources>

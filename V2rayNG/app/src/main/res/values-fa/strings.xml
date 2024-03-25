@@ -262,10 +262,47 @@
     </string-array>
     <string name="menu_item_add_asset">افزودن</string>
     <string name="menu_item_add_url">افزودن لینک</string>
+    <string name="register">ثبت نام</string>
     <string name="login">ورود</string>
     <string name="username">نام کاربری</string>
     <string name="password">گذرواژه</string>
-    <string name="login_text">بزن بریم</string>
-    <string name="login_error_filed">لطفا نام کاربری و گذرواژه را وارد کنید</string>
+    <string name="user_profile">پروفایل</string>
+    <string name="name">نام</string>
+    <string name="email">ایمیل</string>
+    <string name="created_at">ساخته شده در</string>
+    <string name="update_at">بروزرسانی شده در</string>
+    <string name="close">بستن</string>
+    <string name="app_no_internet_msg">دسترسی به اینترنت را بررسی کنید.</string>
+    <string name="fullname">نام</string>
+    <string name="login_text">ورود</string>
+    <string name="login_error_filed">نام کاربری و گذرواژه خود را وارد کنید.</string>
+    <string name="login_error">ورود با خطا مواجه شد</string>
+    <string name="error_in_login">خطا در ورود!</string>
+    <string name="error_in_verified_token">تأیید کاربر ناموفق بود</string>
+    <string name="error_in_verified_token_message">اوه، تایید حساب شما با خطا مواجه شد.</string>
+    <string name="logout">خروج</string>
+    <string name="message">پیام</string>
+    <string name="account_status_is_unpaid">توجه: وضعیت حساب شما پرداخت نشده است، لطفا در اسرع وقت نسبت به پرداخت بدهی اقدام نمایید.</string>
+    <string name="expire_at">معتبر است تا</string>
+
+    <string name="title_activity_login">ورود</string>
+    <string name="prompt_email">ایمیل</string>
+    <string name="prompt_password">گذرواژه</string>
+    <string name="action_sign_in">ورود یا ثبت نام</string>
+    <string name="action_sign_in_short">ورود</string>
+    <string name="welcome">"خوش آمدید"</string>
+    <string name="invalid_username">نام کاربری نامعتبر</string>
+    <string name="invalid_password">گذرواژه باید بیشتر از ۵ کاراکتر باشد</string>
+    <string name="login_failed">"ورود ناموفق"</string>
+    <string name="server_is_not_available">سرور در دسترس نمیباشد!</string>
+    <string name="an_unknown_error_occurred">خطایی نامشخص رخ داد</string>
+    <string name="call_support">ارتباط با پشتیبانی</string>
+    <string name="get_user_info">دریافت اطلاعات کاربر</string>
+    <string name="back">بازگشت</string>
+    <string name="telegram_channel">کانال تلگرام</string>
+    <string name="telegram_support">تلگرام پشتیبانی</string>
+    <string name="email_support">ایمیل پشتیبانی</string>
+    <string name="user_info">حساب کاربری</string>
+    <string name="reload_data">بارگذاری مجدد داده ها</string>
 
 </resources>

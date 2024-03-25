@@ -33,7 +33,7 @@ object V2rayConfigUtil {
     data class Result(var status: Boolean, var content: String)
 
     /**
-     * 生成v2ray的客户端配置文件
+     * Generate v2ray client configuration file
      */
     fun getV2rayConfig(context: Context, guid: String): Result {
         try {
@@ -59,7 +59,7 @@ object V2rayConfigUtil {
     }
 
     /**
-     * 生成v2ray的客户端配置文件
+     * Generate v2ray client configuration file
      */
     private fun getV2rayNonCustomConfig(
         context: Context,
@@ -67,13 +67,13 @@ object V2rayConfigUtil {
         remarks: String,
     ): Result {
         val result = Result(false, "")
-        //取得默认配置
+        //Get the default configuration
         val assets = Utils.readTextFromAssets(context, "v2ray_config.json")
         if (TextUtils.isEmpty(assets)) {
             return result
         }
 
-        //转成Json
+        //Convert to Json
         val v2rayConfig = Gson().fromJson(assets, V2rayConfig::class.java) ?: return result
 
         v2rayConfig.log.loglevel = settingsStorage?.decodeString(AppConfig.PREF_LOGLEVEL)
@@ -163,8 +163,8 @@ object V2rayConfigUtil {
             v2rayConfig.fakedns = listOf(V2rayConfig.FakednsBean())
             v2rayConfig.outbounds.filter { it.protocol == PROTOCOL_FREEDOM && it.tag == TAG_DIRECT }
                 .forEach {
-                    it.settings?.domainStrategy = "UseIP"
-                }
+                it.settings?.domainStrategy = "UseIP"
+            }
         }
     }
 
@@ -195,9 +195,9 @@ object V2rayConfigUtil {
 
             // Hardcode googleapis.cn
             val googleapisRoute = V2rayConfig.RoutingBean.RulesBean(
-                type = "field",
-                outboundTag = AppConfig.TAG_AGENT,
-                domain = arrayListOf("domain:googleapis.cn")
+                    type = "field",
+                    outboundTag = AppConfig.TAG_AGENT,
+                    domain = arrayListOf("domain:googleapis.cn")
             )
 
             when (routingMode) {
@@ -333,7 +333,7 @@ object V2rayConfigUtil {
                 // fakedns with all domains to make it always top priority
                 v2rayConfig.dns.servers?.add(
                     0,
-                    V2rayConfig.DnsBean.ServersBean(
+                        V2rayConfig.DnsBean.ServersBean(
                         address = "fakedns",
                         domains = geositeCn.plus(proxyDomain).plus(directDomain)
                     )
@@ -344,9 +344,9 @@ object V2rayConfigUtil {
             val remoteDns = Utils.getRemoteDnsServers()
             if (v2rayConfig.inbounds.none { e -> e.protocol == "dokodemo-door" && e.tag == "dns-in" }) {
                 val dnsInboundSettings = V2rayConfig.InboundBean.InSettingsBean(
-                    address = if (Utils.isPureIpAddress(remoteDns.first())) remoteDns.first() else "1.1.1.1",
-                    port = 53,
-                    network = "tcp,udp"
+                        address = if (Utils.isPureIpAddress(remoteDns.first())) remoteDns.first() else "1.1.1.1",
+                        port = 53,
+                        network = "tcp,udp"
                 )
 
                 val localDnsPort = Utils.parseInt(
@@ -354,26 +354,26 @@ object V2rayConfigUtil {
                     AppConfig.PORT_LOCAL_DNS.toInt()
                 )
                 v2rayConfig.inbounds.add(
-                    V2rayConfig.InboundBean(
-                        tag = "dns-in",
-                        port = localDnsPort,
-                        listen = "127.0.0.1",
-                        protocol = "dokodemo-door",
-                        settings = dnsInboundSettings,
-                        sniffing = null
+                        V2rayConfig.InboundBean(
+                                tag = "dns-in",
+                                port = localDnsPort,
+                                listen = "127.0.0.1",
+                                protocol = "dokodemo-door",
+                                settings = dnsInboundSettings,
+                                sniffing = null
                     )
                 )
             }
 
-            // DNS outbound对象
+            // DNS outbound object
             if (v2rayConfig.outbounds.none { e -> e.protocol == "dns" && e.tag == "dns-out" }) {
                 v2rayConfig.outbounds.add(
-                    V2rayConfig.OutboundBean(
-                        protocol = "dns",
-                        tag = "dns-out",
-                        settings = null,
-                        streamSettings = null,
-                        mux = null
+                        V2rayConfig.OutboundBean(
+                                protocol = "dns",
+                                tag = "dns-out",
+                                settings = null,
+                                streamSettings = null,
+                                mux = null
                     )
                 )
             }
@@ -473,10 +473,10 @@ object V2rayConfigUtil {
             // hardcode googleapi rule to fix play store problems
             hosts["domain:googleapis.cn"] = "googleapis.com"
 
-            // DNS dns对象
+            // DNS dns object
             v2rayConfig.dns = V2rayConfig.DnsBean(
-                servers = servers,
-                hosts = hosts
+                    servers = servers,
+                    hosts = hosts
             )
 
             // DNS routing
@@ -539,7 +539,7 @@ object V2rayConfigUtil {
             }
 
             if (outbound.streamSettings?.network == DEFAULT_NETWORK
-                && outbound.streamSettings?.tcpSettings?.header?.type == HTTP
+                    && outbound.streamSettings?.tcpSettings?.header?.type == HTTP
             ) {
                 val path = outbound.streamSettings?.tcpSettings?.header?.request?.path
                 val host = outbound.streamSettings?.tcpSettings?.header?.request?.headers?.Host

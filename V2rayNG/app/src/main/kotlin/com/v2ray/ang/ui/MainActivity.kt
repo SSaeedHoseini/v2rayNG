@@ -21,6 +21,7 @@ import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,8 +29,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.tencent.mmkv.MMKV
+import com.v2ray.ang.AngApplication
 import com.v2ray.ang.AppConfig.ANG_PACKAGE
 import com.v2ray.ang.BuildConfig
+import com.v2ray.ang.alertdialog.*
 import com.v2ray.ang.databinding.ActivityMainBinding
 import com.v2ray.ang.dto.EConfigType
 import com.v2ray.ang.extension.toast
@@ -39,30 +42,56 @@ import java.util.concurrent.TimeUnit
 import com.v2ray.ang.helper.SimpleItemTouchHelperCallback
 import com.v2ray.ang.service.V2RayServiceManager
 import com.v2ray.ang.util.*
+import com.v2ray.ang.util.Utils.emailSupport
+import com.v2ray.ang.util.Utils.goToTelegramChannel
+import com.v2ray.ang.util.Utils.telegramSupport
+import com.v2ray.ang.viewmodel.ConfigsViewModel
 import com.v2ray.ang.viewmodel.MainViewModel
+import com.v2ray.ang.viewmodel.UserViewModel
 import kotlinx.coroutines.*
 import me.drakeet.support.toast.ToastCompat
 import java.io.File
 import java.io.FileOutputStream
+import androidx.lifecycle.Observer
+import androidx.lifecycle.distinctUntilChanged
+import org.json.JSONException
+import org.json.JSONObject
 
-class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener,
+    MyAlertDialog.AlertDialogInterface {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var alertDialogModel: MyAlertDialogViewModel
 
     private val adapter by lazy { MainRecyclerAdapter(this) }
-    private val mainStorage by lazy { MMKV.mmkvWithID(MmkvManager.ID_MAIN, MMKV.MULTI_PROCESS_MODE) }
-    private val settingsStorage by lazy { MMKV.mmkvWithID(MmkvManager.ID_SETTING, MMKV.MULTI_PROCESS_MODE) }
-    private val requestVpnPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_OK) {
-            startV2Ray()
-        }
+    private val mainStorage by lazy {
+        MMKV.mmkvWithID(
+            MmkvManager.ID_MAIN,
+            MMKV.MULTI_PROCESS_MODE
+        )
     }
+    private val settingsStorage by lazy {
+        MMKV.mmkvWithID(
+            MmkvManager.ID_SETTING,
+            MMKV.MULTI_PROCESS_MODE
+        )
+    }
+    private val requestVpnPermission =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                startV2Ray()
+            }
+        }
     private var mItemTouchHelper: ItemTouchHelper? = null
+
     val mainViewModel: MainViewModel by viewModels()
+    val userViewModel: UserViewModel by viewModels()
+    val configsViewModel: ConfigsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
+
         setContentView(view)
         title = getString(R.string.title_server)
         setSupportActionBar(binding.toolbar)
@@ -105,6 +134,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         toggle.syncState()
         binding.navView.setNavigationItemSelectedListener(this)
         "v${BuildConfig.VERSION_NAME} (${SpeedtestUtil.getLibVersion()})".also { binding.version.text = it }
+
+        alertDialogModel = AlertDialogManager.initializeViewModel(this);
 
         setupViewModel()
         copyAssets()
@@ -160,13 +191,81 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             hideCircle()
         }
         mainViewModel.startListenBroadcast()
+
+        configsViewModel.getConfigs(false).distinctUntilChanged().observe(this) { configs ->
+            MmkvManager.removeAllServer()
+            configs!!.urls.forEach { config ->
+                try {
+                    JSONObject(config)
+                    mainViewModel.appendCustomConfigServer(config)
+                }catch (e: JSONException){
+                    configsViewModel.importConfig(config)
+                }
+            }
+            mainViewModel.reloadServerList()
+        }
+
+        configsViewModel.mShowAPIError.observe(this) {
+            validationError(it)
+        }
+
+        userViewModel.mShowAPIError.observe(this) {
+            validationError(it)
+        }
+
+        userViewModel.getUser(false).observe(this, Observer { user ->
+            setTitle(user?.username)
+            if (user?.profile?.message == "") {
+                binding.tvMessage.visibility = View.GONE
+            } else {
+                binding.tvMessage.visibility = View.VISIBLE
+                binding.tvMessage.text = user?.profile?.message
+            }
+
+            if (user?.profile?.privateMessage == "") {
+                binding.tvPrivateMessage.visibility = View.GONE
+            } else {
+                binding.tvPrivateMessage.visibility = View.VISIBLE
+                binding.tvPrivateMessage.text = user?.profile?.privateMessage
+            }
+//
+//            if (user?.profile?.paid == false) {
+//                binding.tvAccountStatus.visibility = View.VISIBLE
+//                binding.tvAccountStatus.text = "توجه: وضعیت حساب شما پرداخت نشده است، برای جلوگیری از مسدود شدن حساب، لطفا در اسرع وقت نسبت به پرداخت بدهی اقدام نمایید."
+//            } else {
+//                binding.tvAccountStatus.visibility = View.GONE
+//            }
+
+            binding.tvExpireAt.text =  "حساب شما تا " + user?.profile?.expireAt + " معتبر است."
+        })
+    }
+
+    private fun validationError(message: String) {
+        if (mainViewModel.isRunning.value == true) {
+            Utils.stopVService(this)
+        }
+        AlertDialogManager.showMyDialog(
+            this,
+            AlertType.Dynamic, alertDialogModel, this
+        );
+        alertDialogModel.setOptions(
+            AlertOptions(
+                title = getString(R.string.error_in_verified_token),
+                text = message,
+                alternativeText = getString(R.string.call_support),
+                mainText = getString(R.string.close),
+                icon = R.drawable.icon_warning,
+                isCancelable = false,
+                type = AlertType.Unknown
+            )
+        )
     }
 
     private fun copyAssets() {
         val extFolder = Utils.userAssetPath(this)
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val geo = arrayOf("geosite.dat", "geoip.dat")
+                val geo = arrayOf("geosite.dat", "geoip.dat", "iran.dat")
                 assets.list("")
                         ?.filter { geo.contains(it) }
                         ?.filter { !File(extFolder, it).exists() }
@@ -202,6 +301,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     fun startV2Ray() {
+        userViewModel.getVerify(true)
         if (mainStorage?.decodeString(MmkvManager.KEY_SELECTED_SERVER).isNullOrEmpty()) {
             return
         }
@@ -224,7 +324,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     public override fun onResume() {
         super.onResume()
-        mainViewModel.reloadServerList()
+        userViewModel.getVerify(true)
+        userViewModel.getUser(true)
     }
 
     public override fun onPause() {
@@ -311,6 +412,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
 
         R.id.real_ping_all -> {
+            if (mainViewModel.isRunning.value == true) {
+                Utils.stopVService(this)
+            }
             mainViewModel.testAllRealPing()
             true
         }
@@ -353,6 +457,29 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         R.id.filter_config -> {
             mainViewModel.filterConfig(this)
+            true
+        }
+        R.id.user_info -> {
+            //TODO chem chera
+            true
+        }
+        R.id.user_logout ->{
+            if (mainViewModel.isRunning.value == true) {
+                Utils.stopVService(this)
+            }
+            MmkvManager.removeTokens()
+            MmkvManager.removeAllServer()
+            val i = Intent(applicationContext, LoginActivity::class.java)
+            startActivity(i)
+            finish()
+            true
+        }
+        R.id.user_download_config -> {
+            if (mainViewModel.isRunning.value == true) {
+                Utils.stopVService(this)
+            }
+            configsViewModel.getConfigs(true)
+            toast(R.string.toast_success)
             true
         }
 
@@ -694,8 +821,30 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.privacy_policy-> {
                 Utils.openUri(this, AppConfig.v2rayNGPrivacyPolicy)
             }
+
+            R.id.email_support -> {
+                emailSupport()
+            }
+
+            R.id.telegram_support -> {
+                telegramSupport()
+            }
+
+            R.id.telegram_channel -> {
+                goToTelegramChannel()
+            }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun alertDialogMainOption(type: AlertType?) {
+        MmkvManager.removeTokens()
+        MmkvManager.removeAllServer()
+        finishAffinity();
+    }
+
+    override fun alertDialogAlternativeOption(type: AlertType?) {
+        emailSupport()
     }
 }

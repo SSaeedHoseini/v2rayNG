@@ -17,6 +17,7 @@ import android.provider.Settings
 import android.util.Log
 import android.util.Patterns
 import android.webkit.URLUtil
+import androidx.core.content.ContextCompat.startActivity
 import com.tencent.mmkv.MMKV
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.AppConfig.ANG_PACKAGE
@@ -26,12 +27,13 @@ import com.v2ray.ang.extension.toast
 import java.net.*
 import com.v2ray.ang.service.V2RayServiceManager
 import java.io.IOException
+import com.v2ray.ang.AngApplication
 
 object Utils {
 
     private val mainStorage by lazy { MMKV.mmkvWithID(MmkvManager.ID_MAIN, MMKV.MULTI_PROCESS_MODE) }
     private val settingsStorage by lazy { MMKV.mmkvWithID(MmkvManager.ID_SETTING, MMKV.MULTI_PROCESS_MODE) }
-
+    
     /**
      * convert string to editalbe for kotlin
      *
@@ -410,5 +412,34 @@ object Utils {
     fun isTv(context: Context): Boolean =
         context.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
+
+    fun emailSupport(){
+        val intent = Intent(Intent.ACTION_SENDTO);
+        intent.data = Uri.parse("mailto:v2rayngplus@gmail.com")
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (intent.resolveActivity(AngApplication.application.packageManager) != null) {
+            startActivity(AngApplication.application, intent, null)
+        }
+    }
+
+    fun goToTelegramChannel() {
+        val tgintent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("https://t.me/v2rayngplusapp")
+        );
+        tgintent.setPackage("org.telegram.messenger");
+        tgintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(AngApplication.application, tgintent, null);
+    }
+
+    fun telegramSupport() {
+        val tgintent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("https://t.me/modirv2rayngplus")
+        );
+        tgintent.setPackage("org.telegram.messenger");
+        tgintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(AngApplication.application, tgintent, null);
+    }
 }
 
