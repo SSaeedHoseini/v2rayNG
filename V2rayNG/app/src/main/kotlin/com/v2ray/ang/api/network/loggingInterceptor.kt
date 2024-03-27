@@ -14,11 +14,11 @@ class loggingInterceptor : Interceptor {
 
         val t1 = System.nanoTime()
         Log.d(
-            "request logging",
+            "request",
             "Sending request ${request.url} with ${request.headers}",
         )
         Log.d(
-            "request logging",
+            "request",
             "REQUEST BODY BEGIN:\n ${bodyToString(request)}\nREQUEST BODY END"
         )
         val response = chain.proceed(request)
@@ -33,11 +33,11 @@ class loggingInterceptor : Interceptor {
 
         val t2 = System.nanoTime()
         Log.d(
-            "request logging",
+            "request",
             "Received response with code ${response.code} for ${response.request.url} in ${(t2 - t1) / 1e6}.1fm ${response.headers}",
         )
         Log.d(
-            "request logging",
+            "request",
             "RESPONSE BODY BEGIN:\n ${responseBodyString}\nRESPONSE BODY END"
         )
 

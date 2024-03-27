@@ -12,7 +12,7 @@ class RestClient {
 
     companion object {
 //        private const val BASE_URL = "https://shahid-aleali.site/"
-        private const val BASE_URL = "http://192.168.1.104:8000/"
+        private const val BASE_URL = "http://192.168.1.4:8000/api/"
 
         private lateinit var mApiServices: ApiServices
         private var mInstance: RestClient? = null
@@ -30,9 +30,9 @@ class RestClient {
         val okHttpClient = OkHttpClient.Builder()
         okHttpClient.addInterceptor(AuthInterceptor(AngApplication.application))
         if (BuildConfig.DEBUG) okHttpClient.addInterceptor(loggingInterceptor())
-        okHttpClient.connectTimeout(15, TimeUnit.SECONDS)
-        okHttpClient.readTimeout(15, TimeUnit.SECONDS)
-        okHttpClient.writeTimeout(30, TimeUnit.SECONDS)
+        okHttpClient.connectTimeout(5, TimeUnit.SECONDS)
+        okHttpClient.readTimeout(10, TimeUnit.SECONDS)
+        okHttpClient.writeTimeout(15, TimeUnit.SECONDS)
         okHttpClient.retryOnConnectionFailure(true)
         okHttpClient.connectionPool(ConnectionPool())
         okHttpClient.build()

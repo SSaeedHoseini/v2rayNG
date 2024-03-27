@@ -12,12 +12,12 @@ import java.net.URLConnection
 val Context.v2RayApplication: AngApplication
     get() = applicationContext as AngApplication
 
-fun Context.toast(message: Int) {
-    ToastCompat.makeText(this, message, Toast.LENGTH_SHORT).apply { show() }
+fun Context.toast(message: Int,length: Int=Toast.LENGTH_SHORT) {
+    ToastCompat.makeText(this, message, length).apply { show() }
 }
 
-fun Context.toast(message: CharSequence) {
-    ToastCompat.makeText(this, message, Toast.LENGTH_SHORT).apply { show() }
+fun Context.toast(message: CharSequence,length: Int=Toast.LENGTH_SHORT) {
+    ToastCompat.makeText(this, message, length).apply { show() }
 }
 
 fun JSONObject.putOpt(pair: Pair<String, Any?>) {

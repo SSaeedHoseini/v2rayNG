@@ -1,5 +1,6 @@
 package com.v2ray.ang.api.network
 
+import com.google.gson.annotations.SerializedName
 import com.v2ray.ang.dto.*
 import com.v2ray.ang.util.MmkvManager
 import retrofit2.Call
@@ -9,15 +10,7 @@ interface ApiServices {
 
     @POST("auth/login/")
     @Headers("Content-Type: application/json")
-    fun login(@Body loginInput: LoginInput): Call<LoginResponse>
-
-    @POST("auth/token/refresh/")
-    @Headers("Content-Type: application/json")
-    fun refreshToken(@Body refreshInput: RefreshInput): Call<RefreshResponse>
-
-    @POST("auth/token/verify/")
-    @Headers("Content-Type: application/json")
-    fun getVerify(@Body verifyInput: VerifyInput): Call<Void>
+    fun login(@Body payload: LoginInput): Call<LoginResponse>
 
     @GET("servers/config/")
     @Headers("withAuth:true", "Content-Type: application/json")

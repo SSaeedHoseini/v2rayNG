@@ -213,31 +213,31 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             validationError(it)
         }
 
-        userViewModel.getUser(false).observe(this, Observer { user ->
-            setTitle(user?.username)
-            if (user?.profile?.message == "") {
-                binding.tvMessage.visibility = View.GONE
-            } else {
-                binding.tvMessage.visibility = View.VISIBLE
-                binding.tvMessage.text = user?.profile?.message
-            }
-
-            if (user?.profile?.privateMessage == "") {
-                binding.tvPrivateMessage.visibility = View.GONE
-            } else {
-                binding.tvPrivateMessage.visibility = View.VISIBLE
-                binding.tvPrivateMessage.text = user?.profile?.privateMessage
-            }
-//
-//            if (user?.profile?.paid == false) {
-//                binding.tvAccountStatus.visibility = View.VISIBLE
-//                binding.tvAccountStatus.text = "توجه: وضعیت حساب شما پرداخت نشده است، برای جلوگیری از مسدود شدن حساب، لطفا در اسرع وقت نسبت به پرداخت بدهی اقدام نمایید."
+//        userViewModel.getUser(false).observe(this, Observer { user ->
+//            setTitle(user?.username)
+//            if (user?.profile?.message == "") {
+//                binding.tvMessage.visibility = View.GONE
 //            } else {
-//                binding.tvAccountStatus.visibility = View.GONE
+//                binding.tvMessage.visibility = View.VISIBLE
+//                binding.tvMessage.text = user?.profile?.message
 //            }
-
-            binding.tvExpireAt.text =  "حساب شما تا " + user?.profile?.expireAt + " معتبر است."
-        })
+//
+//            if (user?.profile?.privateMessage == "") {
+//                binding.tvPrivateMessage.visibility = View.GONE
+//            } else {
+//                binding.tvPrivateMessage.visibility = View.VISIBLE
+//                binding.tvPrivateMessage.text = user?.profile?.privateMessage
+//            }
+////
+////            if (user?.profile?.paid == false) {
+////                binding.tvAccountStatus.visibility = View.VISIBLE
+////                binding.tvAccountStatus.text = "توجه: وضعیت حساب شما پرداخت نشده است، برای جلوگیری از مسدود شدن حساب، لطفا در اسرع وقت نسبت به پرداخت بدهی اقدام نمایید."
+////            } else {
+////                binding.tvAccountStatus.visibility = View.GONE
+////            }
+//
+//            binding.tvExpireAt.text =  "حساب شما تا " + user?.profile?.expireAt + " معتبر است."
+//        })
     }
 
     private fun validationError(message: String) {
@@ -301,7 +301,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     fun startV2Ray() {
-        userViewModel.getVerify(true)
+//        userViewModel.getVerify(true)
         if (mainStorage?.decodeString(MmkvManager.KEY_SELECTED_SERVER).isNullOrEmpty()) {
             return
         }
@@ -324,8 +324,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     public override fun onResume() {
         super.onResume()
-        userViewModel.getVerify(true)
-        userViewModel.getUser(true)
+//        userViewModel.getVerify(true)
+//        userViewModel.getUser(true)
     }
 
     public override fun onPause() {

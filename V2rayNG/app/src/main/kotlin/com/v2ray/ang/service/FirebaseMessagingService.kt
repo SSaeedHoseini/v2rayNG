@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.v2ray.ang.R
+import com.v2ray.ang.util.MmkvManager
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -57,6 +58,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // FCM registration token to your app server.
+        MmkvManager.setRegistrationId(token)
         // sendRegistrationToServer(token)
     }
 }

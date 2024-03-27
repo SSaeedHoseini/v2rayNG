@@ -3,6 +3,7 @@ package com.v2ray.ang.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -11,7 +12,6 @@ import com.v2ray.ang.R
 import com.v2ray.ang.alertdialog.*
 import com.v2ray.ang.databinding.ActivityLoginBinding
 import com.v2ray.ang.extension.toast
-import com.v2ray.ang.util.MmkvManager
 import com.v2ray.ang.util.Utils.emailSupport
 import com.v2ray.ang.viewmodel.UserViewModel
 import kotlin.toString
@@ -40,12 +40,12 @@ class LoginActivity : AppCompatActivity(), MyAlertDialog.AlertDialogInterface {
         binding.btLogin.setOnClickListener {
             username = binding.etUsername.text.toString()
             password = binding.etPassword.text.toString()
+
             if (username.isEmpty() || password.isEmpty()) {
-                toast(R.string.login_error_filed)
+                toast(R.string.login_error_filed, Toast.LENGTH_LONG)
             } else {
-                userViewModel.loginUser(username, password).observe(this) { login ->
-                    if (login?.accessToken != null) {
-                        MmkvManager.encodeAccount(login)
+                userViewModel.login(username, password).observe(this) { login ->
+                    if (login) {
                         var intent = Intent(this@LoginActivity, SplashScreenActivity::class.java)
                         startActivity(intent)
                         finish()
