@@ -3,7 +3,6 @@ package com.v2ray.ang.util
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.v2ray.ang.dto.AssetUrlItem
-import com.v2ray.ang.dto.LoginResponse
 import com.v2ray.ang.dto.ServerAffiliationInfo
 import com.v2ray.ang.dto.ServerConfig
 import com.v2ray.ang.dto.SubscriptionItem
@@ -20,61 +19,21 @@ object MmkvManager {
     const val ID_SETTING = "SETTING"
     const val KEY_SELECTED_SERVER = "SELECTED_SERVER"
     const val KEY_ANG_CONFIGS = "ANG_CONFIGS"
-    const val ID_UUID = "uuid"
-    const val ACCESS_TOKEN = "access_token";
-    const val REFRESH_TOKEN = "refresh_token";
-    const val USER_INFO = "user_info";
+
+    const val USER_CONFIG = "USER_INFORMATION"
+    const val REGISTRATION_ID = "REGISTRATION_TOKEN"
+    const val DEVICE_ID = "DEVICE_TOKEN"
+    const val USER_TOKEN = "USER_TOKEN";
+    const val USER_INFO = "USER_INFO";
 
     private val mainStorage by lazy { MMKV.mmkvWithID(ID_MAIN, MMKV.MULTI_PROCESS_MODE) }
     private val serverStorage by lazy { MMKV.mmkvWithID(ID_SERVER_CONFIG, MMKV.MULTI_PROCESS_MODE) }
     private val serverAffStorage by lazy { MMKV.mmkvWithID(ID_SERVER_AFF, MMKV.MULTI_PROCESS_MODE) }
     private val subStorage by lazy { MMKV.mmkvWithID(ID_SUB, MMKV.MULTI_PROCESS_MODE) }
-     private val assetStorage by lazy { MMKV.mmkvWithID(ID_ASSET, MMKV.MULTI_PROCESS_MODE) }
-    private val uuidStorage by lazy { MMKV.mmkvWithID(ID_UUID, MMKV.MULTI_PROCESS_MODE) }
-    private val accessStorage by lazy { MMKV.mmkvWithID(ACCESS_TOKEN, MMKV.MULTI_PROCESS_MODE) }
-    private val refreshStorage by lazy { MMKV.mmkvWithID(REFRESH_TOKEN, MMKV.MULTI_PROCESS_MODE) }
-    private val userStorage by lazy { MMKV.mmkvWithID(USER_INFO, MMKV.MULTI_PROCESS_MODE) }
+    private val assetStorage by lazy { MMKV.mmkvWithID(ID_ASSET, MMKV.MULTI_PROCESS_MODE) }
 
-    fun getDeviceId(): String {
-        var uuid = uuidStorage?.decodeString(ID_UUID)
-        if (uuid.isNullOrBlank()) {
-            uuid = Utils.getUuid()
-            uuidStorage?.encode(ID_UUID, uuid)
-        }
-        return uuid
-    }
-
-    fun encodeAccessToken(access: String) {
-        if (access.isBlank()) {
-            return
-        }
-        accessStorage?.encode(ACCESS_TOKEN, access)
-    }
-
-    fun encodeRefreshToken(refresh: String) {
-        if (refresh.isBlank()) {
-            return
-        }
-        refreshStorage?.encode(REFRESH_TOKEN, refresh)
-    }
-
-    fun decodeAccessToken(): String? {
-        return accessStorage?.decodeString(ACCESS_TOKEN)
-    }
-
-    fun decodeRefreshToken(): String? {
-        return refreshStorage?.decodeString(REFRESH_TOKEN)
-    }
-
-    fun encodeUser(user: User) {
-        userStorage?.encode(USER_INFO, Gson().toJson(user))
-    }
-
-    fun encodeAccount(account: LoginResponse) {
-        encodeUser(account.user)
-        encodeAccessToken(account.accessToken)
-        encodeRefreshToken(account.refreshToken)
-    }
+    private val deviceStorage by lazy { MMKV.mmkvWithID(DEVICE_ID, MMKV.MULTI_PROCESS_MODE) }
+    private val userStorage by lazy { MMKV.mmkvWithID(USER_CONFIG, MMKV.MULTI_PROCESS_MODE) }
 
     fun decodeServerList(): MutableList<String> {
         val json = mainStorage?.decodeString(KEY_ANG_CONFIGS)
@@ -253,15 +212,32 @@ object MmkvManager {
         if (token.isNullOrBlank()) {
             return
         }
-        mainStorage?.encode(ACCESS_TOKEN, token)
+        userStorage?.encode(USER_TOKEN, token)
     }
     fun decodeToken(): String? {
-        return mainStorage?.decodeString(ACCESS_TOKEN)
+        return userStorage?.decodeString(USER_TOKEN)
     }
-    
-        fun removeTokens() {
+    fun encodeUser(user: User) {
+        userStorage?.encode(USER_INFO, Gson().toJson(user))
+    }
+    fun removeTokens() {
         userStorage?.clearAll()
-        accessStorage?.clearAll()
-        refreshStorage?.clearAll()
+        deviceStorage?.clearAll()
+    }
+    fun getDeviceId(): String {
+        var deviceId = deviceStorage?.decodeString(DEVICE_ID)
+        if (deviceId.isNullOrBlank()) {
+            deviceId = Utils.getUuid()
+            deviceStorage?.encode(DEVICE_ID, deviceId)
+        }
+        return deviceId
+    }
+    fun getRegistrationId(): String{
+        var registrationId = deviceStorage?.decodeString(REGISTRATION_ID)
+        return registrationId!!
+    }
+
+    fun setRegistrationId(token: String?) {
+        deviceStorage?.encode(REGISTRATION_ID, token)
     }
 }

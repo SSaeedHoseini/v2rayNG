@@ -49,6 +49,7 @@
         <activity
             android:name=".ui.SplashScreenActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,7 +66,6 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="false"
-            android:launchMode="singleTask"
             android:theme="@style/AppThemeDayNight.NoActionBar">
         </activity>
         <activity
