@@ -1,2 +1,5 @@
-geosite:cn,
-geosite:geolocation-cn
+domain:shahid-aleali.site,
+ext:iran.dat:ir,
+ext:iran.dat:other,
+geoip:ir,
+domain:ir,
