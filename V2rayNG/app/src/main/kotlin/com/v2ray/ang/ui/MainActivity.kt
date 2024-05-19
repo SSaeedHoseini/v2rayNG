@@ -164,7 +164,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val extFolder = Utils.userAssetPath(this)
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val geo = arrayOf("geosite.dat", "geoip.dat")
+                val geo = arrayOf("geosite.dat", "geoip.dat", "iran.dat")
                 assets.list("")
                         ?.filter { geo.contains(it) }
                         ?.filter { !File(extFolder, it).exists() }
