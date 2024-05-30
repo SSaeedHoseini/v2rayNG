@@ -6,6 +6,7 @@ import com.v2ray.ang.dto.AssetUrlItem
 import com.v2ray.ang.dto.ServerAffiliationInfo
 import com.v2ray.ang.dto.ServerConfig
 import com.v2ray.ang.dto.SubscriptionItem
+import com.v2ray.ang.dto.Token
 import java.net.URI
 
 object MmkvManager {
@@ -18,12 +19,16 @@ object MmkvManager {
     const val ID_SETTING = "SETTING"
     const val KEY_SELECTED_SERVER = "SELECTED_SERVER"
     const val KEY_ANG_CONFIGS = "ANG_CONFIGS"
+    const val ID_USER = "USER"
+    const val USER_TOKEN = "USER_TOKEN"
+    const val USER_DEVICE_UUID = "USER_DEVICE_UUID"
 
     private val mainStorage by lazy { MMKV.mmkvWithID(ID_MAIN, MMKV.MULTI_PROCESS_MODE) }
     private val serverStorage by lazy { MMKV.mmkvWithID(ID_SERVER_CONFIG, MMKV.MULTI_PROCESS_MODE) }
     private val serverAffStorage by lazy { MMKV.mmkvWithID(ID_SERVER_AFF, MMKV.MULTI_PROCESS_MODE) }
     private val subStorage by lazy { MMKV.mmkvWithID(ID_SUB, MMKV.MULTI_PROCESS_MODE) }
     private val assetStorage by lazy { MMKV.mmkvWithID(ID_ASSET, MMKV.MULTI_PROCESS_MODE) }
+    private val userStorage by lazy { MMKV.mmkvWithID(ID_USER, MMKV.MULTI_PROCESS_MODE) }
 
     fun decodeServerList(): MutableList<String> {
         val json = mainStorage?.decodeString(KEY_ANG_CONFIGS)
@@ -179,7 +184,7 @@ object MmkvManager {
         }
     }
 
-    fun sortByTestResults( ) {
+    fun sortByTestResults() {
         data class ServerDelay(var guid: String, var testDelayMillis: Long)
 
         val serverDelays = mutableListOf<ServerDelay>()
@@ -196,5 +201,26 @@ object MmkvManager {
         }
 
         mainStorage?.encode(KEY_ANG_CONFIGS, Gson().toJson(serverList))
+    }
+
+    fun getToken(): String? {
+        val json = userStorage?.decodeString(USER_TOKEN)
+        if (json.isNullOrBlank()) {
+            return null
+        }
+        return Gson().fromJson(json, String::class.java)
+    }
+
+    fun setToken(token: String) {
+        userStorage?.encode(USER_TOKEN, token)
+    }
+
+    fun getDeviceId(): String {
+        var uuid = userStorage?.decodeString(USER_DEVICE_UUID)
+        if (uuid.isNullOrBlank()) {
+            uuid = Utils.getUuid()
+            userStorage?.encode(USER_DEVICE_UUID, uuid)
+        }
+        return uuid
     }
 }

@@ -69,6 +69,26 @@
         android:title="@string/title_filter_config"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/user_login"
+        android:icon="@drawable/ic_privacy_24dp"
+        android:title="@string/user_login"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/user_logout"
+        android:icon="@drawable/ic_outline_filter_alt_24"
+        android:title="@string/title_filter_config"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/get_user_detail"
+        android:icon="@drawable/ic_outline_filter_alt_24"
+        android:title="@string/title_get_user_detail"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/get_configs"
+        android:icon="@drawable/ic_outline_filter_alt_24"
+        android:title="@string/title_get_configs"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/service_restart"
         android:title="@string/title_service_restart"
         app:showAsAction="never" />

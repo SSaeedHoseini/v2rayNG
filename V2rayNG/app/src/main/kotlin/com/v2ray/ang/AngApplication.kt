@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.multidex.MultiDexApplication
 import androidx.work.Configuration
 import com.tencent.mmkv.MMKV
+import com.v2ray.ang.connection.APIService
 import com.v2ray.ang.util.MmkvManager
 import com.v2ray.ang.util.Utils
+import gc.v2ray.angplus.api.network.RestClient
+import retrofit2.Retrofit
 
 class AngApplication : MultiDexApplication(), Configuration.Provider {
     private val settingsStorage by lazy { MMKV.mmkvWithID(MmkvManager.ID_SETTING, MMKV.MULTI_PROCESS_MODE) }
@@ -13,6 +16,7 @@ class AngApplication : MultiDexApplication(), Configuration.Provider {
     companion object {
         //const val PREF_LAST_VERSION = "pref_last_version"
         lateinit var application: AngApplication
+        lateinit var apiService: APIService
     }
 
     override fun attachBaseContext(base: Context?) {
@@ -37,6 +41,8 @@ class AngApplication : MultiDexApplication(), Configuration.Provider {
         MMKV.initialize(this)
 
         Utils.setNightMode(application)
+
+        apiService = RestClient.getInstance().getApiService()
 
         loadDataToPreference(
             AppConfig.PREF_V2RAY_ROUTING_AGENT,
