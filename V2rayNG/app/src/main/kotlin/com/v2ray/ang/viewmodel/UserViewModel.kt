@@ -13,28 +13,30 @@ import com.v2ray.ang.R
 import com.v2ray.ang.connection.Repository
 import com.v2ray.ang.databinding.DialogUserLoginBinding
 import com.v2ray.ang.dto.*
+import com.v2ray.ang.util.MmkvManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class UserViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = Repository(AngApplication.apiService)
-    private val _userDetailsLiveData = MutableLiveData<UserDetailResponse>()
-    val userDetailLiveData: LiveData<UserDetailResponse> = _userDetailsLiveData
+    private val _userDetailsLiveData = MutableLiveData<User>()
+    val userDetailLiveData: LiveData<User> = _userDetailsLiveData
 
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> = _errorLiveData
-    private val _logoutLiveData = MutableLiveData<LogoutResponse>()
-    val logoutLiveData: LiveData<LogoutResponse> = _logoutLiveData
 
-    private val _loginLiveData = MutableLiveData<Token>()
-    val loginLiveData: LiveData<Token> = _loginLiveData
+    private val _loginLiveData = MutableLiveData<Boolean>()
+    val loginLiveData: LiveData<Boolean> = _loginLiveData
 
     fun logout() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val logoutResponse = repository.logout()
-                _logoutLiveData.postValue(logoutResponse)
+                if (logoutResponse.detail.contains("Successfully logged out.")) {
+                    _loginLiveData.postValue(false)
+                }
             } catch (e: Exception) {
                 _errorLiveData.postValue(e.message)
             }
@@ -64,8 +66,14 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         val token = repository.login(username, password)
-                        _loginLiveData.postValue(token)
+                        if (!token.key.isNullOrEmpty()) {
+                            MmkvManager.setToken(token.key)
+                            _loginLiveData.postValue(true)
+                        } else {
+                            _loginLiveData.postValue(false)
+                        }
                     } catch (e: Exception) {
+                        _loginLiveData.postValue(false)
                         _errorLiveData.postValue(e.message)
                     }
                 }
@@ -75,5 +83,15 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         builder.show()
+    }
+
+    fun checkLogin():Boolean {
+        val token = MmkvManager.getToken()
+        if (!token.isNullOrEmpty()){
+            _loginLiveData.postValue(true)
+            return true
+        }
+        _loginLiveData.postValue(false)
+        return false
     }
 }

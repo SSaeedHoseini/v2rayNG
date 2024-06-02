@@ -182,14 +182,29 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         mainViewModel.startListenBroadcast()
 
-        userViewModel.loginLiveData.observe(this) { token ->
-            toast(R.string.login_successfully)
-            MmkvManager.setToken(token.key)
+        userViewModel.loginLiveData.distinctUntilChanged().observe(this) { isLogin ->
+            invalidateOptionsMenu()
+            if (isLogin) {
+                userViewModel.getUser()
+            } else {
+                binding.toolbar.title = ""
+                if (mainViewModel.isRunning.value == true) {
+                    Utils.stopVService(this)
+                }
+                MmkvManager.setToken(null)
+                MmkvManager.removeAllServer()
+                mainViewModel.reloadServerList()
+            }
         }
-        userViewModel.errorLiveData.distinctUntilChanged().observe(this) { error ->
+        userViewModel.errorLiveData.observe(this) { error ->
             if (!error.isNullOrEmpty()) {
                 toast(error)
             }
+        }
+
+        userViewModel.userDetailLiveData.distinctUntilChanged().observe(this) {
+            binding.toolbar.title = it.username
+            toast("successfully updated")
         }
 
         configViewModel.configsLiveData.observe(this) { configs ->
@@ -202,9 +217,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
             }
             mainViewModel.reloadServerList()
-
+            toast("successfully updated")
         }
-        configViewModel.errorLiveData.distinctUntilChanged().observe(this) { error ->
+        configViewModel.errorLiveData.observe(this) { error ->
             if (!error.isNullOrEmpty()) {
                 toast(error)
             }
@@ -274,6 +289,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     public override fun onResume() {
         super.onResume()
         mainViewModel.reloadServerList()
+        userViewModel.checkLogin()
     }
 
     public override fun onPause() {
@@ -281,7 +297,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
+        if(userViewModel.checkLogin())
+            menuInflater.inflate(R.menu.menu_main_login, menu)
+        else
+            menuInflater.inflate(R.menu.menu_main,menu)
         return true
     }
 
@@ -444,7 +463,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
 
         R.id.get_user_detail -> {
-            userViewModel.logout()
+            userViewModel.getUser()
             true
         }
 
@@ -810,5 +829,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun setVisible(lst: IntArray, flag: Boolean) {
+        for (item in lst) {
+            val needLogin = binding.toolbar.menu.findItem(item)
+            needLogin?.setVisible(flag)
+        }
     }
 }

@@ -211,7 +211,7 @@ object MmkvManager {
         return Gson().fromJson(json, String::class.java)
     }
 
-    fun setToken(token: String) {
+    fun setToken(token: String?) {
         userStorage?.encode(USER_TOKEN, token)
     }
 

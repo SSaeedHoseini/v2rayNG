@@ -11,7 +11,7 @@ interface APIService {
     suspend fun getConfigs(): List<Config>
 
     @GET("/api/user/detail/")
-    suspend fun getUser(): UserDetailResponse
+    suspend fun getUser(): User
 
     @POST("/api/user/login/")
     suspend fun login(@Body loginRequest: LoginRequest): Token

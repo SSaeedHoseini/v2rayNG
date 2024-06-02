@@ -2,10 +2,41 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/user_login"
-        android:icon="@drawable/ic_login"
-        android:title="@string/user_login"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/real_ping_all"
+        android:title="@string/title_real_ping_all_server"
+        app:showAsAction="always"
+        android:icon="@drawable/baseline_speed_24"
+        />
+    <item
+        android:id="@+id/get_configs"
+        android:icon="@drawable/ic_cloud_download_24dp"
+        android:title="@string/title_get_configs"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/get_user_detail"
+        android:icon="@drawable/ic_account_circle_24"
+        android:title="@string/title_get_user_detail"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/service_restart"
+        android:title="@string/title_service_restart"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/sort_by_test_results"
+        android:title="@string/title_sort_by_test_results"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/user_logout"
+        android:icon="@drawable/ic_outline_filter_alt_24"
+        android:title="@string/title_logout"
+        app:showAsAction="never"
+        />
+
 
     <item
         android:id="@+id/export_all"

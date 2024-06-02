@@ -9,7 +9,6 @@ data class User(
     val firstName: String,
     @SerializedName("last_name")
     val lastName: String,
-    @SerializedName("userName")
     val username: String,
 
 )

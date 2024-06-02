@@ -12,7 +12,7 @@ class Repository(private val apiService: APIService) {
         }
     }
 
-    suspend fun getUser(): UserDetailResponse {
+    suspend fun getUser(): User {
         try {
             return apiService.getUser()
         } catch (e: Exception) {
