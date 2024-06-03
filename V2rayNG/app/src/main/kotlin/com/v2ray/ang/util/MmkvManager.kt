@@ -7,6 +7,7 @@ import com.v2ray.ang.dto.ServerAffiliationInfo
 import com.v2ray.ang.dto.ServerConfig
 import com.v2ray.ang.dto.SubscriptionItem
 import com.v2ray.ang.dto.Token
+import com.v2ray.ang.dto.User
 import java.net.URI
 
 object MmkvManager {
@@ -22,6 +23,7 @@ object MmkvManager {
     const val ID_USER = "USER"
     const val USER_TOKEN = "USER_TOKEN"
     const val USER_DEVICE_UUID = "USER_DEVICE_UUID"
+    const val USER_DETAIL = "USER_DETAIL"
 
     private val mainStorage by lazy { MMKV.mmkvWithID(ID_MAIN, MMKV.MULTI_PROCESS_MODE) }
     private val serverStorage by lazy { MMKV.mmkvWithID(ID_SERVER_CONFIG, MMKV.MULTI_PROCESS_MODE) }
@@ -222,5 +224,17 @@ object MmkvManager {
             userStorage?.encode(USER_DEVICE_UUID, uuid)
         }
         return uuid
+    }
+
+    fun setUser(user: User) {
+        userStorage?.encode(USER_DETAIL, Gson().toJson(user))
+    }
+
+    fun getUser(): User? {
+        val json = userStorage?.decodeString(USER_DETAIL)
+        if (json.isNullOrBlank()) {
+            return null
+        }
+        return Gson().fromJson(json, User::class.java)
     }
 }

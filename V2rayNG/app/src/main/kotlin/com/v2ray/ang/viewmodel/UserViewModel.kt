@@ -47,8 +47,11 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val user = repository.getUser()
+                MmkvManager.setUser(user)
                 _userDetailsLiveData.postValue(user)
             } catch (e: Exception) {
+                var user = MmkvManager.getUser()
+                if (user != null) _userDetailsLiveData.postValue(user!!)
                 _errorLiveData.postValue(e.message)
             }
         }
