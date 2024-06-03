@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -202,8 +203,47 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         }
 
-        userViewModel.userDetailLiveData.observe(this) {
-            binding.toolbar.title = it.username
+        userViewModel.userDetailLiveData.observe(this) { user ->
+            binding.toolbar.title = user.username
+            if (user.profile.globalMessage.isNullOrEmpty()) {
+                binding.tvGlobalMessage.visibility = View.GONE
+            } else {
+                binding.tvGlobalMessage.visibility = View.VISIBLE
+                binding.tvGlobalMessage.text = user.profile.globalMessage
+            }
+
+            if (user.profile.privateMessage.isNullOrEmpty()) {
+                binding.tvPrivateMessage.visibility = View.GONE
+            } else {
+                binding.tvPrivateMessage.visibility = View.VISIBLE
+                binding.tvPrivateMessage.text = user.profile.privateMessage
+            }
+            if (user.profile.state.isNullOrEmpty()) {
+                binding.tvState.visibility = View.GONE
+            } else {
+                binding.tvState.visibility = View.VISIBLE
+                binding.tvState.text = user.profile.state
+            }
+            if (user.profile.debt.isNullOrEmpty()) {
+                binding.tvDebt.visibility = View.GONE
+            } else {
+                binding.tvDebt.visibility = View.VISIBLE
+                binding.tvDebt.text = user.profile.debt
+            }
+
+            if (user.profile.usage.isNullOrEmpty()) {
+                binding.tvUsage.visibility = View.GONE
+            } else {
+                binding.tvUsage.visibility = View.VISIBLE
+                binding.tvUsage.text = user.profile.usage
+            }
+
+            if (user.profile.remained.isNullOrEmpty()) {
+                binding.tvRemained.visibility = View.GONE
+            } else {
+                binding.tvRemained.visibility = View.VISIBLE
+                binding.tvRemained.text = user.profile.remained
+            }
             toast("successfully updated")
         }
 
@@ -297,10 +337,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if(userViewModel.checkLogin(false))
+        if (userViewModel.checkLogin(false))
             menuInflater.inflate(R.menu.menu_main_login, menu)
         else
-            menuInflater.inflate(R.menu.menu_main,menu)
+            menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
