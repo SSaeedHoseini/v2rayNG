@@ -202,7 +202,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         }
 
-        userViewModel.userDetailLiveData.distinctUntilChanged().observe(this) {
+        userViewModel.userDetailLiveData.observe(this) {
             binding.toolbar.title = it.username
             toast("successfully updated")
         }
@@ -297,7 +297,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if(userViewModel.checkLogin())
+        if(userViewModel.checkLogin(false))
             menuInflater.inflate(R.menu.menu_main_login, menu)
         else
             menuInflater.inflate(R.menu.menu_main,menu)

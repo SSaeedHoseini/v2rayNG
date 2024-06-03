@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 class RestClient {
 
     companion object {
-//        private const val BASE_URL = "https://XXXX/"
+        //        private const val BASE_URL = "https://XXXX/"
         private const val BASE_URL = "http://192.168.1.4:8000/"
 
         private lateinit var mApiServices: APIService
@@ -29,11 +29,12 @@ class RestClient {
 
     init {
         val okHttpClient = OkHttpClient.Builder()
+        okHttpClient.addInterceptor(I18nInterceptor(AngApplication.application))
         okHttpClient.addInterceptor(AuthInterceptor(AngApplication.application))
         if (BuildConfig.DEBUG) okHttpClient.addInterceptor(loggingInterceptor())
-        okHttpClient.connectTimeout(5, TimeUnit.SECONDS)
-        okHttpClient.readTimeout(5, TimeUnit.SECONDS)
-        okHttpClient.writeTimeout(5, TimeUnit.SECONDS)
+        okHttpClient.connectTimeout(3, TimeUnit.SECONDS)
+        okHttpClient.readTimeout(3, TimeUnit.SECONDS)
+        okHttpClient.writeTimeout(3, TimeUnit.SECONDS)
         okHttpClient.retryOnConnectionFailure(true)
         okHttpClient.connectionPool(ConnectionPool())
         okHttpClient.build()

@@ -85,13 +85,13 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         builder.show()
     }
 
-    fun checkLogin():Boolean {
+    fun checkLogin(notify: Boolean = true): Boolean {
         val token = MmkvManager.getToken()
-        if (!token.isNullOrEmpty()){
-            _loginLiveData.postValue(true)
+        if (!token.isNullOrEmpty()) {
+            if (notify) _loginLiveData.postValue(true)
             return true
         }
-        _loginLiveData.postValue(false)
+        if (notify) _loginLiveData.postValue(false)
         return false
     }
 }
