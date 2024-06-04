@@ -260,6 +260,15 @@
     <string name="title_pref_fragment_length">Fragment Length (min-max)</string>
     <string name="title_pref_fragment_interval">Fragment Interval (min-max)</string>
     <string name="title_pref_fragment_enabled">Enable Fragment</string>
+    <string name="login">login</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="user_login">user login</string>
+    <string name="title_get_configs">Get configs</string>
+    <string name="title_get_user_detail">Get user detail</string>
+    <string name="login_successfully">You have successfully logged in</string>
+    <string name="login_failure">Failure to login</string>
+    <string name="title_logout">logout</string>
 
     <string-array name="share_method">
         <item>QRcode</item>

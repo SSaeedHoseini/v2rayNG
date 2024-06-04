@@ -277,6 +277,15 @@
     </string-array>
     <string name="menu_item_add_asset">افزودن</string>
     <string name="menu_item_add_url">افزودن لینک</string>
+    <string name="login">ورود</string>
+    <string name="username">نام کاربری</string>
+    <string name="password">گذرواژه</string>
+    <string name="user_login">ورود کاربر</string>
+    <string name="title_get_configs">دریافت کانفیگ ها</string>
+    <string name="title_get_user_detail">دریافت اطلاعات کاربر</string>
+    <string name="login_successfully">با موفقیت وارد شدید.</string>
+    <string name="login_failure">عدم موفقیت در ورود</string>
+    <string name="title_logout">خروج</string>
 
     <string-array name="ui_mode_night">
         <item>Follow system</item>
