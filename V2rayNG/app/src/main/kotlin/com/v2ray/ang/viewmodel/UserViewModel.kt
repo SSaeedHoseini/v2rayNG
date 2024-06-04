@@ -17,12 +17,11 @@ import com.v2ray.ang.util.MmkvManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class UserViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = Repository(AngApplication.apiService)
-    private val _userDetailsLiveData = MutableLiveData<User>()
-    val userDetailLiveData: LiveData<User> = _userDetailsLiveData
+    private val _userDetailsLiveData = MutableLiveData<User?>()
+    val userDetailLiveData: LiveData<User?> = _userDetailsLiveData
 
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> = _errorLiveData
@@ -33,10 +32,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun logout() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val logoutResponse = repository.logout()
-                if (logoutResponse.detail.contains("Successfully logged out.")) {
-                    _loginLiveData.postValue(false)
-                }
+                repository.logout()
+                _loginLiveData.postValue(false)
+                _userDetailsLiveData.postValue(null)
             } catch (e: Exception) {
                 _errorLiveData.postValue(e.message)
             }
@@ -91,7 +89,13 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun checkLogin(notify: Boolean = true): Boolean {
         val token = MmkvManager.getToken()
         if (!token.isNullOrEmpty()) {
-            if (notify) _loginLiveData.postValue(true)
+            if (notify) {
+                var user = MmkvManager.getUser()
+                if (user != null) _userDetailsLiveData.postValue(user!!)
+                else {
+                    _loginLiveData.postValue(true)
+                }
+            }
             return true
         }
         if (notify) _loginLiveData.postValue(false)

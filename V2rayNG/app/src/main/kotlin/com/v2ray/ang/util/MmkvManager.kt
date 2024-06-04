@@ -226,8 +226,9 @@ object MmkvManager {
         return uuid
     }
 
-    fun setUser(user: User) {
-        userStorage?.encode(USER_DETAIL, Gson().toJson(user))
+    fun setUser(user: User?) {
+        if (user == null) userStorage?.encode(USER_DETAIL, "")
+        else userStorage?.encode(USER_DETAIL, Gson().toJson(user))
     }
 
     fun getUser(): User? {

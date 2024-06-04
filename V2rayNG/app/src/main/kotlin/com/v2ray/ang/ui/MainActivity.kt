@@ -22,7 +22,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -170,7 +169,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             if (isRunning) {
                 binding.fab.setImageResource(R.drawable.ic_stop_24dp)
                 binding.fab.backgroundTintList =
-                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_active))
+                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPing))
                 setTestState(getString(R.string.connection_connected))
                 binding.layoutTest.isFocusable = true
             } else {
@@ -183,68 +182,75 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         mainViewModel.startListenBroadcast()
 
-        userViewModel.loginLiveData.distinctUntilChanged().observe(this) { isLogin ->
+        userViewModel.loginLiveData.observe(this) { isLogin ->
             invalidateOptionsMenu()
             if (isLogin) {
                 userViewModel.getUser()
+                configViewModel.getConfigs()
             } else {
                 binding.toolbar.title = ""
                 if (mainViewModel.isRunning.value == true) {
                     Utils.stopVService(this)
                 }
                 MmkvManager.setToken(null)
+                MmkvManager.setUser(null)
                 MmkvManager.removeAllServer()
                 mainViewModel.reloadServerList()
             }
         }
         userViewModel.errorLiveData.observe(this) { error ->
             if (!error.isNullOrEmpty()) {
-                toast(error)
+                if (error.contains("Failed to connect to", ignoreCase = true)!!) {
+                    toast((getString(R.string.connection_test_fail)))
+                } else toast(error)
             }
         }
 
         userViewModel.userDetailLiveData.observe(this) { user ->
-            binding.toolbar.title = user.username
-            if (user.profile.globalMessage.isNullOrEmpty()) {
-                binding.tvGlobalMessage.visibility = View.GONE
-            } else {
+            if (!user?.username.isNullOrEmpty())
+                binding.toolbar.title = user?.username
+            else
+                binding.toolbar.title = ""
+
+            if (!user?.profile?.globalMessage.isNullOrEmpty()) {
                 binding.tvGlobalMessage.visibility = View.VISIBLE
-                binding.tvGlobalMessage.text = user.profile.globalMessage
+                binding.tvGlobalMessage.text = user?.profile?.globalMessage
+            } else {
+                binding.tvGlobalMessage.visibility = View.GONE
             }
 
-            if (user.profile.privateMessage.isNullOrEmpty()) {
-                binding.tvPrivateMessage.visibility = View.GONE
-            } else {
+            if (!user?.profile?.privateMessage.isNullOrEmpty()) {
                 binding.tvPrivateMessage.visibility = View.VISIBLE
-                binding.tvPrivateMessage.text = user.profile.privateMessage
-            }
-            if (user.profile.state.isNullOrEmpty()) {
-                binding.tvState.visibility = View.GONE
+                binding.tvPrivateMessage.text = user?.profile?.privateMessage
             } else {
+                binding.tvPrivateMessage.visibility = View.GONE
+            }
+            if (!user?.profile?.state.isNullOrEmpty()) {
                 binding.tvState.visibility = View.VISIBLE
-                binding.tvState.text = user.profile.state
-            }
-            if (user.profile.debt.isNullOrEmpty()) {
-                binding.tvDebt.visibility = View.GONE
+                binding.tvState.text = user?.profile?.state
             } else {
+                binding.tvState.visibility = View.GONE
+            }
+            if (!user?.profile?.debt.isNullOrEmpty()) {
                 binding.tvDebt.visibility = View.VISIBLE
-                binding.tvDebt.text = user.profile.debt
+                binding.tvDebt.text = user?.profile?.debt
+            } else {
+                binding.tvDebt.visibility = View.GONE
             }
 
-            if (user.profile.usage.isNullOrEmpty()) {
-                binding.tvUsage.visibility = View.GONE
-            } else {
+            if (!user?.profile?.usage.isNullOrEmpty()) {
                 binding.tvUsage.visibility = View.VISIBLE
-                binding.tvUsage.text = user.profile.usage
+                binding.tvUsage.text = user?.profile?.usage
+            } else {
+                binding.tvUsage.visibility = View.GONE
             }
 
-            if (user.profile.remained.isNullOrEmpty()) {
-                binding.tvRemained.visibility = View.GONE
-            } else {
+            if (!user?.profile?.remained.isNullOrEmpty()) {
                 binding.tvRemained.visibility = View.VISIBLE
-                binding.tvRemained.text = user.profile.remained
+                binding.tvRemained.text = user?.profile?.remained
+            } else {
+                binding.tvRemained.visibility = View.GONE
             }
-            toast("successfully updated")
         }
 
         configViewModel.configsLiveData.observe(this) { configs ->
@@ -261,9 +267,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         configViewModel.errorLiveData.observe(this) { error ->
             if (!error.isNullOrEmpty()) {
-                toast(error)
+                if (error.contains("Failed to connect to", ignoreCase = true)!!) {
+                    toast((getString(R.string.connection_test_fail)))
+                } else toast(error)
             }
         }
+
+        if (userViewModel.checkLogin(false)) userViewModel.getUser()
     }
 
     private fun copyAssets() {
@@ -329,7 +339,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     public override fun onResume() {
         super.onResume()
         mainViewModel.reloadServerList()
-        userViewModel.checkLogin()
+        if (userViewModel.checkLogin(false)) userViewModel.getUser()
     }
 
     public override fun onPause() {
@@ -869,12 +879,5 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    private fun setVisible(lst: IntArray, flag: Boolean) {
-        for (item in lst) {
-            val needLogin = binding.toolbar.menu.findItem(item)
-            needLogin?.setVisible(flag)
-        }
     }
 }
