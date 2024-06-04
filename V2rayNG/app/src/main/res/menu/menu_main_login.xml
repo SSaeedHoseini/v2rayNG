@@ -26,6 +26,11 @@
         app:showAsAction="never"
         />
     <item
+        android:id="@+id/ping_all"
+        android:title="@string/title_ping_all_server"
+        android:visible="true"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/sort_by_test_results"
         android:title="@string/title_sort_by_test_results"
         app:showAsAction="never"
@@ -71,11 +76,6 @@
         android:id="@+id/del_invalid_config"
         android:icon="@drawable/ic_delete_24dp"
         android:title="@string/title_del_invalid_config"
-        android:visible="false"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/ping_all"
-        android:title="@string/title_ping_all_server"
         android:visible="false"
         app:showAsAction="never" />
 
