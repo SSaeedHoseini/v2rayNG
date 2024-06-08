@@ -196,6 +196,14 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="tile" />
         </service>
+
+        <service
+            android:name=".service.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <!-- =====================Tasker===================== -->
         <activity
             android:exported="true"
@@ -238,7 +246,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/cache_paths"/>
         </provider>
-
     </application>
 
 </manifest>

@@ -20,7 +20,8 @@ class AuthInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request: Request = chain.request()
-        if (request.url.encodedPath != "/api/user/login/") {
+        if (request.url.encodedPath != "/api/user/login/" &&
+            request.url.encodedPath != "/api/user/token-update/") {
             val token = MmkvManager.getToken()
             val code = MmkvManager.getDeviceId()
             request = request.newBuilder()

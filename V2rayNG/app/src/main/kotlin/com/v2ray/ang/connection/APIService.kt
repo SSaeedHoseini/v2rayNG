@@ -5,6 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Body
 
 import com.v2ray.ang.dto.*
+import retrofit2.Response
 
 interface APIService {
     @GET("/api/configs/")
@@ -16,6 +17,9 @@ interface APIService {
     @POST("/api/user/login/")
     suspend fun login(@Body loginRequest: LoginRequest): Token
 
-    @GET("/api/user/logout/")
-    suspend fun logout(): LogoutResponse
+    @POST("/api/user/logout/")
+    suspend fun logout(@Body logoutRequest:LogoutRequest): LogoutResponse
+
+    @POST("/api/user/token-update/")
+    suspend fun registrationTokenUpdate(@Body deviceRequest:DeviceRequest): Response<Unit>
 }

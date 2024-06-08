@@ -8,7 +8,6 @@ import com.v2ray.ang.connection.APIService
 import com.v2ray.ang.util.MmkvManager
 import com.v2ray.ang.util.Utils
 import gc.v2ray.angplus.api.network.RestClient
-import retrofit2.Retrofit
 
 class AngApplication : MultiDexApplication(), Configuration.Provider {
     private val settingsStorage by lazy { MMKV.mmkvWithID(MmkvManager.ID_SETTING, MMKV.MULTI_PROCESS_MODE) }

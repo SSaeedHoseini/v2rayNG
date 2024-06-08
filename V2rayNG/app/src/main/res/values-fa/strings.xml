@@ -286,6 +286,7 @@
     <string name="login_successfully">با موفقیت وارد شدید.</string>
     <string name="login_failure">عدم موفقیت در ورود</string>
     <string name="title_logout">خروج</string>
+    <string name="unknown_error">خطای ناشناخته</string>
 
     <string-array name="ui_mode_night">
         <item>Follow system</item>

@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -71,12 +72,10 @@ android {
                     "all"
 
                 output.outputFileName = "v2rayNG_${variant.versionName}_${abi}.apk"
-                if(versionCodes.containsKey(abi))
-                {
-                    output.versionCodeOverride = (1000000 * versionCodes[abi]!!).plus(variant.versionCode)
-                }
-                else
-                {
+                if (versionCodes.containsKey(abi)) {
+                    output.versionCodeOverride =
+                        (1000000 * versionCodes[abi]!!).plus(variant.versionCode)
+                } else {
                     return@forEach
                 }
             }
@@ -87,10 +86,13 @@ android {
         buildConfig = true
         dataBinding = true
     }
+    packaging {
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar","*.jar"))))
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar", "*.jar"))))
     testImplementation("junit:junit:4.13.2")
 
     // Androidx
@@ -134,6 +136,11 @@ dependencies {
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
+
+    // Firebase Cloud Messaging
+    implementation("com.google.firebase:firebase-messaging:24.0.0")
+    implementation("com.android.databinding:compiler:3.5.1")
+    implementation("com.google.guava:guava:31.0.1-android")
 }

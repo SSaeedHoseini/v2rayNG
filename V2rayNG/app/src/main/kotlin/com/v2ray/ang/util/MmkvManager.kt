@@ -24,7 +24,9 @@ object MmkvManager {
     const val USER_TOKEN = "USER_TOKEN"
     const val USER_DEVICE_UUID = "USER_DEVICE_UUID"
     const val USER_DETAIL = "USER_DETAIL"
+    const val REGISTRATION_ID = "REGISTRATION_ID"
 
+    
     private val mainStorage by lazy { MMKV.mmkvWithID(ID_MAIN, MMKV.MULTI_PROCESS_MODE) }
     private val serverStorage by lazy { MMKV.mmkvWithID(ID_SERVER_CONFIG, MMKV.MULTI_PROCESS_MODE) }
     private val serverAffStorage by lazy { MMKV.mmkvWithID(ID_SERVER_AFF, MMKV.MULTI_PROCESS_MODE) }
@@ -237,5 +239,14 @@ object MmkvManager {
             return null
         }
         return Gson().fromJson(json, User::class.java)
+    }
+
+    fun getRegistrationId(): String{
+        var registrationId = userStorage?.decodeString(REGISTRATION_ID)
+        return registrationId!!
+    }
+
+    fun setRegistrationId(token: String?) {
+        userStorage?.encode(REGISTRATION_ID, token)
     }
 }

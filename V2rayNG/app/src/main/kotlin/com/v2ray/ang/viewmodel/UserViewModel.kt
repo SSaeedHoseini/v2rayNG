@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.v2ray.ang.AngApplication
 import com.v2ray.ang.R
+import com.v2ray.ang.connection.FORCEException
 import com.v2ray.ang.connection.Repository
 import com.v2ray.ang.databinding.DialogUserLoginBinding
 import com.v2ray.ang.dto.*
@@ -47,6 +48,10 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                 val user = repository.getUser()
                 MmkvManager.setUser(user)
                 _userDetailsLiveData.postValue(user)
+            } catch (e: FORCEException) {
+                _userDetailsLiveData.postValue(null)
+                _loginLiveData.postValue(false)
+                _errorLiveData.postValue(e.message)
             } catch (e: Exception) {
                 var user = MmkvManager.getUser()
                 if (user != null) _userDetailsLiveData.postValue(user!!)
@@ -100,5 +105,15 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         }
         if (notify) _loginLiveData.postValue(false)
         return false
+    }
+
+    fun tokenUpdate() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                repository.registrationTokenUpdate()
+            } catch (e: Exception) {
+                // ignore
+            }
+        }
     }
 }
