@@ -16,7 +16,16 @@ class Repository(private val apiService: APIService) {
 
     suspend fun getUser(): User {
         try {
-            return apiService.getUser()
+            val deviceId = MmkvManager.getDeviceId()
+            val registrationId = MmkvManager.getRegistrationId()
+            val version = BuildConfig.VERSION_NAME
+            return apiService.getUser(
+                DeviceRequest(
+                    deviceId,
+                    registrationId,
+                    version
+                )
+            )
         } catch (e: Exception) {
             throw getErrorMessage(e)
         }
@@ -26,12 +35,13 @@ class Repository(private val apiService: APIService) {
         try {
             val deviceId = MmkvManager.getDeviceId()
             val registrationId = MmkvManager.getRegistrationId()
+            val version = BuildConfig.VERSION_NAME
             val loginRequest = LoginRequest(
                 username,
                 password,
                 deviceId,
                 registrationId,
-                BuildConfig.VERSION_NAME
+                version
             )
             return apiService.login(loginRequest)
         } catch (e: Exception) {
@@ -52,10 +62,12 @@ class Repository(private val apiService: APIService) {
         try {
             val deviceId = MmkvManager.getDeviceId()
             val registrationId = MmkvManager.getRegistrationId()
+            val version = BuildConfig.VERSION_NAME
             apiService.registrationTokenUpdate(
                 DeviceRequest(
                     deviceId,
-                    registrationId
+                    registrationId,
+                    version
                 )
             )
         } catch (e: Exception) {

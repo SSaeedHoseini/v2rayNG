@@ -9,4 +9,7 @@ data class DeviceRequest(
     @SerializedName("registration_id")
     var registrationId: String,
 
+    @SerializedName("version")
+    var version: String,
+
 )

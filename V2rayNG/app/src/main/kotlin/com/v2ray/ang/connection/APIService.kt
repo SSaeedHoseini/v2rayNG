@@ -11,8 +11,8 @@ interface APIService {
     @GET("/api/configs/")
     suspend fun getConfigs(): List<Config>
 
-    @GET("/api/user/detail/")
-    suspend fun getUser(): User
+    @POST("/api/user/detail/")
+    suspend fun getUser(@Body deviceRequest:DeviceRequest): User
 
     @POST("/api/user/login/")
     suspend fun login(@Body loginRequest: LoginRequest): Token
@@ -20,6 +20,6 @@ interface APIService {
     @POST("/api/user/logout/")
     suspend fun logout(@Body logoutRequest:LogoutRequest): LogoutResponse
 
-    @POST("/api/user/token-update/")
+    @POST("/api/user/registration-id-update/")
     suspend fun registrationTokenUpdate(@Body deviceRequest:DeviceRequest): Response<Unit>
 }
