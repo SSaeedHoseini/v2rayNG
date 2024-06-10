@@ -173,7 +173,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             if (isRunning) {
                 binding.fab.setImageResource(R.drawable.ic_stop_24dp)
                 binding.fab.backgroundTintList =
-                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPing))
+                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_active))
                 setTestState(getString(R.string.connection_connected))
                 binding.layoutTest.isFocusable = true
             } else {

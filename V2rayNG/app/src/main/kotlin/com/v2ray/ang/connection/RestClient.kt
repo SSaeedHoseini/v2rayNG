@@ -13,7 +13,7 @@ class RestClient {
 
     companion object {
         //        private const val BASE_URL = "https://XXXX/"
-        private const val BASE_URL = "http://192.168.1.4:8000/"
+        private const val BASE_URL = "http://192.168.1.4:8001/"
 
         private lateinit var mApiServices: APIService
         private var mInstance: RestClient? = null

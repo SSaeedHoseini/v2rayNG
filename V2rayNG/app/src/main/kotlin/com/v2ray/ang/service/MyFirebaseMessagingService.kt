@@ -1,11 +1,16 @@
 package com.v2ray.ang.service
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.os.Build
 import android.util.Log
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.v2ray.ang.AngApplication
+import com.v2ray.ang.R
 import com.v2ray.ang.connection.Repository
 import com.v2ray.ang.util.MmkvManager
 import kotlinx.coroutines.CoroutineScope
@@ -13,11 +18,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
+
 class MyFirebaseMessagingService : FirebaseMessagingService() {
+
 
     private val repository = Repository(AngApplication.apiService)
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
+
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
@@ -27,16 +36,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             Log.i("Firebase", "Message data payload: ${remoteMessage.data}")
         }
 
-        val service = V2RayServiceManager.serviceControl?.get()?.getService() ?: return
-
-        val channelId =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                V2RayServiceManager.createNotificationChannel()
-            } else {
-                // If earlier version channel ID is not used
-                // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
-                ""
-            }
         // Handle notification payload of FCM messages.
         remoteMessage.notification?.let {
 
@@ -44,13 +43,28 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             Log.i("Firebase", "Message Notification Image: ${it.imageUrl}")
             Log.i("Firebase", "Message Notification Body: ${it.body}")
 
-            NotificationCompat.Builder(service, channelId)
-                .setContentTitle(it.title)
-                .setContentText(it.body.toString())
-                .setPriority(NotificationCompat.PRIORITY_MIN)
-                .setOngoing(true)
-                .setShowWhen(false)
-                .setOnlyAlertOnce(true).build()
+            val notificationChannel = "message_received_for_server_channel"
+
+            val notificationManager = NotificationManagerCompat.from(applicationContext)
+            val notification =
+                NotificationCompat.Builder(applicationContext, notificationChannel)
+                    .setContentTitle(it.title)
+                    .setContentText(it.body.toString())
+                    .setSmallIcon(R.drawable.ic_stat_name)
+                    .setPriority(NotificationCompat.PRIORITY_MIN)
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notification.setChannelId(notificationChannel)
+                val channel =
+                    NotificationChannel(
+                        notificationChannel,
+                        "Notification Receiver Service",
+                        NotificationManager.IMPORTANCE_MIN
+                    )
+                notificationManager.createNotificationChannel(channel)
+            }
+            notificationManager.notify(4, notification.build())
         }
     }
 
